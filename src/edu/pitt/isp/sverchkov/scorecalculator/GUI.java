@@ -16,7 +16,7 @@ public class GUI implements UserInterface {
     private double ess;
 
     @Override
-    public void gueryUser() {
+    public void queryUser() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -32,7 +32,7 @@ public class GUI implements UserInterface {
 
     @Override
     public ScoreFunction getScoreFunction() {
-        return new BDe( ess );
+        return new BDeu( ess );
     }
     
 }

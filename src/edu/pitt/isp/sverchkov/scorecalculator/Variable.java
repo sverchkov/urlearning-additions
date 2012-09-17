@@ -5,12 +5,15 @@
 package edu.pitt.isp.sverchkov.scorecalculator;
 
 /**
- * The BDe scoring function.
+ *
  * @author YUS24
  */
-class BDe implements ScoreFunction {
+public interface Variable {
 
-    public BDe(double ess) {
-    }
+    public String getName();
+
+    public int getCardinality();
+
+    public Iterable<String> getInstantiations();
     
 }

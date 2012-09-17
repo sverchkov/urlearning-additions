@@ -4,6 +4,8 @@
  */
 package edu.pitt.isp.sverchkov.scorecalculator;
 
+import java.util.Set;
+
 /**
  *
  * @author YUS24
@@ -15,10 +17,10 @@ public class ScoreCalculator {
      */
     public static void main(String[] args) {
         UserInterface ui = new GUI();
-        ui.gueryUser();
+        ui.queryUser();
         
         RecordSet rs = RecordReader.read( ui.getRecordFile() );
-                
+                        
         ScoreWriter sw = new ScoreFileV1Writer( ui.getOutputFile() );
         
         ScoreFunction sf = ui.getScoreFunction();

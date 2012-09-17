@@ -12,7 +12,7 @@ import java.io.File;
  */
 public interface UserInterface {
 
-    public void gueryUser();
+    public void queryUser();
 
     public File getRecordFile();
 
