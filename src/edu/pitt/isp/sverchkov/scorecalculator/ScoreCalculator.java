@@ -16,7 +16,9 @@ public class ScoreCalculator {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        UserInterface ui = new GUI();
+        
+        UserInterface ui = ( System.console() == null ? new GUI() : new CLI( args ) );
+        
         ui.queryUser();
         
         RecordSet rs = RecordReader.read( ui.getRecordFile() );
