@@ -4,20 +4,26 @@
  */
 package edu.pitt.isp.sverchkov.scorecalculator;
 
+import edu.pitt.isp.sverchkov.scorecalculator.gui.ScoreCalculatorJFrame;
+import java.awt.EventQueue;
 import java.io.File;
 
 /**
  *
  * @author YUS24
  */
-public class GUI implements UserInterface {
+public class GUI extends AbstractUI implements UserInterface {
     
-    private File recordFile, outputFile;
-    private double ess;
-
     @Override
     public void queryUser() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        ScoreCalculatorJFrame.setLookAndFeel();
+        ScoreCalculatorJFrame frame = new ScoreCalculatorJFrame();
+        frame.setVisible(true);
+        recordFile = frame.getRecordFile();
+        outputFile = frame.getOutputFile();
+        scoreFunction = new BDeu( frame.getESS() );
+        
     }
 
     @Override
@@ -32,7 +38,7 @@ public class GUI implements UserInterface {
 
     @Override
     public ScoreFunction getScoreFunction() {
-        return new BDeu( ess );
+        return scoreFunction;
     }
     
 }
