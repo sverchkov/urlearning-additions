@@ -4,11 +4,18 @@
  */
 package edu.pitt.isp.sverchkov.scorecalculator.gui;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author YUS24
  */
 public class ScoreCalculatorJFrame extends javax.swing.JFrame {
+    
+    private File recordFile;
+    private File outputFile;
+    private double ess;
 
     /**
      * Creates new form ScoreCalculatorJFrame
@@ -37,6 +44,7 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
         jRadioButton1 = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,11 +54,16 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Score Function:");
 
-        jLabel4.setText("jLabel4");
+        jLabel4.setText("Select a file");
 
-        jLabel5.setText("jLabel5");
+        jLabel5.setText("Select a file");
 
         jButton1.setText("Open...");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Save...");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -74,6 +87,8 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
+
+        jButton3.setText("Submit");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,7 +119,10 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 165, Short.MAX_VALUE)))
+                        .addGap(0, 165, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton3)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -127,14 +145,22 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
                     .addComponent(jRadioButton1)
                     .addComponent(jLabel6)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        int returnValue = fc.showSaveDialog(this);
+        if( returnValue == JFileChooser.APPROVE_OPTION )
+            outputFile = fc.getSelectedFile();
+        
+        jLabel5.setText( outputFile.getName() );
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
@@ -142,16 +168,24 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+        ess = Double.parseDouble( jTextField1.getText() );
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        int returnValue = fc.showOpenDialog(this);
+        if( returnValue == JFileChooser.APPROVE_OPTION )
+            recordFile = fc.getSelectedFile();
+        
+        jLabel4.setText( recordFile.getName() );
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public static void setLookAndFeel(){
         /*
          * Set the Nimbus look and feel
          */
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /*
          * If Nimbus (introduced in Java SE 6) is not available, stay with the
@@ -165,16 +199,19 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ScoreCalculatorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ScoreCalculatorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ScoreCalculatorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ScoreCalculatorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        
+        setLookAndFeel();
 
         /*
          * Create and display the form
@@ -189,6 +226,7 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -201,5 +239,17 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
 
     // Custom variables declaration
     private javax.swing.InputVerifier inputVerifier;
+
+    public File getRecordFile() {
+        return recordFile;
+    }
+
+    public File getOutputFile() {
+        return outputFile;
+    }
+
+    public double getESS() {
+        return ess;
+    }
     
 }
