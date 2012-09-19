@@ -17,11 +17,20 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
     private File outputFile;
     private double ess;
     private final Object lock;
+    private final JFileChooser recordFC;
+    private final JFileChooser outputFC;
+
 
     /**
      * Creates new form ScoreCalculatorJFrame
      */
     public ScoreCalculatorJFrame( Object lock ) {
+        
+        recordFC = new JFileChooser();
+        recordFC.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        outputFC = new JFileChooser();
+        outputFC.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        
         initComponents();
         jTextField1.setInputVerifier( new DecimalInputVerifier() );
         this.lock = lock;
@@ -161,11 +170,10 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode( JFileChooser.FILES_ONLY );
-        int returnValue = fc.showSaveDialog(this);
+        outputFC.setCurrentDirectory( recordFC.getCurrentDirectory() );
+        int returnValue = outputFC.showSaveDialog(this);
         if( returnValue == JFileChooser.APPROVE_OPTION )
-            outputFile = fc.getSelectedFile();
+            outputFile = outputFC.getSelectedFile();
         
         jLabel5.setText( outputFile.getName() );
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -179,11 +187,10 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode( JFileChooser.FILES_ONLY );
-        int returnValue = fc.showOpenDialog(this);
+        recordFC.setCurrentDirectory( outputFC.getCurrentDirectory() );
+        int returnValue = recordFC.showOpenDialog(this);
         if( returnValue == JFileChooser.APPROVE_OPTION )
-            recordFile = fc.getSelectedFile();
+            recordFile = recordFC.getSelectedFile();
         
         jLabel4.setText( recordFile.getName() );
     }//GEN-LAST:event_jButton1ActionPerformed
