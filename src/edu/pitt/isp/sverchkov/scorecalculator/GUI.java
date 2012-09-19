@@ -7,6 +7,7 @@ package edu.pitt.isp.sverchkov.scorecalculator;
 import edu.pitt.isp.sverchkov.scorecalculator.gui.ScoreCalculatorJFrame;
 import java.awt.EventQueue;
 import java.io.File;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -14,12 +15,21 @@ import java.io.File;
  */
 public class GUI extends AbstractUI implements UserInterface {
     
+    private static final Logger LOG = Logger.getLogger(GUI.class);
+    
     @Override
     public void queryUser() {
         
         ScoreCalculatorJFrame.setLookAndFeel();
-        ScoreCalculatorJFrame frame = new ScoreCalculatorJFrame();
+        Object lock = new Object();
+        ScoreCalculatorJFrame frame = new ScoreCalculatorJFrame( lock );
         frame.setVisible(true);
+        try {
+            synchronized( lock ){ lock.wait(); }
+        } catch (InterruptedException ex) {
+            LOG.fatal( ex.getMessage() );
+            LOG.trace( ex, ex );
+        }
         recordFile = frame.getRecordFile();
         outputFile = frame.getOutputFile();
         scoreFunction = new BDeu( frame.getESS() );
