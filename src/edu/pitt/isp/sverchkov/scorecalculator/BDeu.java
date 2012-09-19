@@ -8,6 +8,7 @@ import edu.pitt.isp.sverchkov.combinatorics.Assignments;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.math.special.Gamma;
+import org.apache.log4j.Logger;
 
 /**
  * The BDeu scoring function.
@@ -15,6 +16,7 @@ import org.apache.commons.math.special.Gamma;
  */
 class BDeu implements ScoreFunction {
     
+    private static final Logger LOG = Logger.getLogger(BDeu.class);
     private final double ess;
 
     /**
@@ -50,6 +52,7 @@ class BDeu implements ScoreFunction {
             }
             
             parentInstantiations = new Assignments<>( pArray, parentStates );
+            LOG.debug("Parent instantiation iterable initialized.");
         }
 
         double aIJ = ess/variable.getCardinality();
@@ -62,6 +65,7 @@ class BDeu implements ScoreFunction {
                         
             double aIJK = aIJ/nParentInstantiations;
             
+            LOG.debug("Iterating over instantiations for "+variable.getName()+" = "+state+"...");
             for( Map<Variable,String> assignment : parentInstantiations ){
                 // Parent assignment -level term
                 // Gamma( alpha_ijk + N_ijk ) / Gamma( alpha_ijk )
