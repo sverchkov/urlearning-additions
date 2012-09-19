@@ -50,7 +50,7 @@ public class ScoreFileV1Writer implements ScoreWriter {
                 // Iterate over all variables
                 for( int i=0; i < variables.length; i++ ){
                     
-                    LOG.info("Writing scores for variable \""+variables[i].getName()+"\" ("+i+" out of "+variables.length+".");
+                    LOG.info("Writing scores for variable \""+variables[i].getName()+"\" ("+i+" out of "+variables.length+").");
 
                     // Write header for variable
                     writeVariable( stream, variables[i], (int) all/2 );
