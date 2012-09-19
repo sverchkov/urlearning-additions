@@ -7,12 +7,15 @@ package edu.pitt.isp.sverchkov.scorecalculator;
 import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author YUS24
  */
 public class ScoreFileV1Writer implements ScoreWriter {
+    
+    private static final Logger LOG = Logger.getLogger(ScoreFileV1Writer.class);
     
     private final File outFile;
     
@@ -37,14 +40,22 @@ public class ScoreFileV1Writer implements ScoreWriter {
         try {
             try ( DataOutputStream stream = new DataOutputStream( new BufferedOutputStream( new FileOutputStream( outFile ) ) )){
                 
+                LOG.debug("Output file opened.");
+                
                 // Write the header
                 writeHeader( stream, variables.length-1, rs.size(), variables.length );
+                
+                LOG.debug("Header written.");
 
                 // Iterate over all variables
                 for( int i=0; i < variables.length; i++ ){
+                    
+                    LOG.info("Writing scores for variable \""+variables[i].getName()+"\" ("+i+" out of "+variables.length+".");
 
                     // Write header for variable
                     writeVariable( stream, variables[i], (int) all/2 );
+                    
+                    LOG.debug("Variable header weritten. Writing "+all/2+" scores...");
 
                     // Iterate over all subsets
                     for( long bits = all; bits >= 0; bits-- )
@@ -64,12 +75,16 @@ public class ScoreFileV1Writer implements ScoreWriter {
                             // Write score
                             writeScore( stream, bits, score );
                         }
+                    
+                    LOG.debug("Scores written.");
                 }
             }        
         }catch( FileNotFoundException e ){
-            e.printStackTrace();
+            LOG.fatal( e.getMessage() );
+            LOG.trace( e, e );
         }catch( IOException e ){
-            e.printStackTrace();
+            LOG.fatal( e.getMessage() );
+            LOG.trace( e, e );
         }
     }
 
