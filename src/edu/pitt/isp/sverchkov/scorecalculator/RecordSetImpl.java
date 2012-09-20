@@ -53,5 +53,34 @@ public class RecordSetImpl implements RecordSet {
         }
         return count;
     }
+
+    @Override
+    public Iterator<Map<Variable, String>> iterator() {
+        return new RecordIterator();
+    }
+    
+    private class RecordIterator implements Iterator<Map<Variable, String>> {
+        
+        private int index=0;
+
+        @Override
+        public boolean hasNext() {
+            return index < data.length;
+        }
+
+        @Override
+        public Map<Variable, String> next() {
+            Map<Variable,String> result = new HashMap<>();
+            for( int i=0; i < variables.length; i++ )
+                result.put(variables[i],data[index][i]);
+            ++index;
+            return result;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("This iterator does not support the remove operation.");
+        }
+    }
     
 }

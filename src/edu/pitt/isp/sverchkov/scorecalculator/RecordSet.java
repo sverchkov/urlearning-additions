@@ -5,13 +5,12 @@
 package edu.pitt.isp.sverchkov.scorecalculator;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
  * @author YUS24
  */
-public interface RecordSet {
+public interface RecordSet extends Iterable<Map<Variable,String>> {
 
     /**
      * @return an array of variable descriptions
@@ -36,4 +35,5 @@ public interface RecordSet {
      * @return The number of records that match this assignment.
      */
     public int count( Map<Variable,String> assignment );
+    
 }
