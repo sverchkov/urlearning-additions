@@ -4,7 +4,8 @@
  */
 package edu.pitt.isp.sverchkov.scorecalculator;
 
-import edu.pitt.isp.sverchkov.combinatorics.Assignments;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.math.special.Gamma;
@@ -31,29 +32,13 @@ class BDeu implements ScoreFunction {
     public double score(Variable variable, Set<Variable> parents, RecordSet rs) {
         
         double result = 0;
+        Set<Variable> parentsAndChild = new HashSet<>( parents );
+        parentsAndChild.add(variable);
         
-        // Calculate number of parent instantiations and initialize the
-        // iterable parent instantiations object.
+        // Calculate number of parent instantiations.
         int nParentInstantiations = 1;
-        Assignments<Variable,String> parentInstantiations;
-        {
-            Variable[] pArray = parents.toArray( new Variable[parents.size()] );
-            String[][] parentStates = new String[parents.size()][];
-            
-            for( int i=0; i<pArray.length; i++ ){                
-                int cardinality = pArray[i].getCardinality();
-                nParentInstantiations *= cardinality;
-                
-                parentStates[i] = new String[cardinality];
-                
-                int j=0;
-                for( String state : pArray[i].getInstantiations() )
-                    parentStates[i][j++] = state;
-            }
-            
-            parentInstantiations = new Assignments<>( pArray, parentStates );
-            LOG.debug("Parent instantiation iterable initialized.");
-        }
+        for( Variable parent : parents )
+            nParentInstantiations *= parent.getCardinality();
 
         double aIJ = ess/variable.getCardinality();
         
@@ -65,11 +50,19 @@ class BDeu implements ScoreFunction {
                         
             double aIJK = aIJ/nParentInstantiations;
             
-            LOG.debug("Iterating over instantiations for "+variable.getName()+" = "+state+"...");
-            for( Map<Variable,String> assignment : parentInstantiations ){
+            //LOG.debug("Getting parent instantiation counts for "+variable.getName()+" = "+state+"...");
+            // We just need the parent instantiations that have non-zero counts
+            Map<Map<Variable,String>, Integer> counts = new HashMap<>();
+            for( Map<Variable,String> assignment : rs )
+                if( assignment.get(variable).equals(state) ){
+                    assignment.keySet().retainAll( parentsAndChild );
+                    Integer count = counts.get( assignment );
+                    counts.put(assignment, count == null ? 1 : count + 1 );
+                }
+            
+            for( Integer nIJK : counts.values() ){
                 // Parent assignment -level term
                 // Gamma( alpha_ijk + N_ijk ) / Gamma( alpha_ijk )
-                double nIJK = rs.count( assignment );
                 result += Gamma.logGamma( aIJK + nIJK ) - Gamma.logGamma( aIJK );
             }
         }
