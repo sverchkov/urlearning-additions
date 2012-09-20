@@ -36,6 +36,8 @@ public class ScoreFileV1Writer implements ScoreWriter {
         for( int i=0; i < bitmasks.length; i++ )
             all |= ( bitmasks[i] = 1L << i );
         
+        LOG.debug("All-parent bitmask: "+Long.toBinaryString(all));
+        
         // Initialize the output stream
         try {
             try ( DataOutputStream stream = new DataOutputStream( new BufferedOutputStream( new FileOutputStream( outFile ) ) )){
@@ -51,7 +53,8 @@ public class ScoreFileV1Writer implements ScoreWriter {
                 for( int i=0; i < variables.length; i++ ){
                     
                     LOG.info("Writing scores for variable \""+variables[i].getName()+"\" ("+i+" out of "+variables.length+").");
-
+                    LOG.debug("Variable bitmask: "+Long.toBinaryString(bitmasks[i]));
+                    
                     // Write header for variable
                     writeVariable( stream, variables[i], (int) all/2 );
                     
@@ -70,6 +73,7 @@ public class ScoreFileV1Writer implements ScoreWriter {
                                     set.add( variables[j] );
 
                             // Compute score
+                            LOG.debug("Computing score...");
                             double score = sf.score( variables[i], set, rs );
 
                             // Write score
@@ -97,6 +101,7 @@ public class ScoreFileV1Writer implements ScoreWriter {
     }
 
     private void writeScore(DataOutputStream stream, long bits, double score) throws IOException {
+        LOG.trace("Writing score "+score+" for parent set "+Long.toBinaryString(bits));
         stream.writeLong(bits);
         stream.writeFloat( (float) score );
     }
