@@ -26,6 +26,7 @@ class BDeu implements ScoreFunction {
      */
     public BDeu(double ess) {
         this.ess = ess;
+        LOG.debug("Using BDeu Score with ESS="+this.ess);
     }
 
     @Override
@@ -35,21 +36,25 @@ class BDeu implements ScoreFunction {
         Set<Variable> parentsAndChild = new HashSet<>( parents );
         parentsAndChild.add(variable);
         
-        // Calculate number of parent instantiations.
-        int nParentInstantiations = 1;
-        for( Variable parent : parents )
-            nParentInstantiations *= parent.getCardinality();
-
         double aIJ = ess/variable.getCardinality();
-        
+
+        // Calculate number of parent instantiations. Use ln-space for numerical
+        // stability with large numbers of parent instantiations.
+        double logParentInstantiations = 0;
+        for( Variable parent : parents )
+            logParentInstantiations += Math.log( parent.getCardinality() );
+
+        double aIJK = Math.exp( Math.log(aIJ)-logParentInstantiations );
+
         for( String state : variable.getInstantiations() ){
             // Variable state-level term
             // Gamma( alpha_ij ) / Gamma( alpha_ij + N_ij )
             double nIJ = rs.count( variable, state );            
             result += Gamma.logGamma( aIJ ) - Gamma.logGamma( aIJ + nIJ );
-                        
-            double aIJK = aIJ/nParentInstantiations;
             
+            if( Double.isNaN( result ) )
+                throw new RuntimeException( "Got NaN: a_ij="+aIJ+", N_ij="+nIJ );
+                                    
             //LOG.debug("Getting parent instantiation counts for "+variable.getName()+" = "+state+"...");
             // We just need the parent instantiations that have non-zero counts
             Map<Map<Variable,String>, Integer> counts = new HashMap<>();
@@ -64,6 +69,8 @@ class BDeu implements ScoreFunction {
                 // Parent assignment -level term
                 // Gamma( alpha_ijk + N_ijk ) / Gamma( alpha_ijk )
                 result += Gamma.logGamma( aIJK + nIJK ) - Gamma.logGamma( aIJK );
+                if( Double.isNaN( result ) )
+                    throw new RuntimeException( "Got NaN: a_ijk="+aIJK+", N_ijk="+nIJK );
             }
         }
         
