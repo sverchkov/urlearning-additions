@@ -37,7 +37,7 @@ public class ScoreFileV1Writer implements ScoreWriter {
             bitmasks[i] = 1L << i;
         final int nscores = (int) (all+1)/2;
         
-        LOG.debug("All-parent bitmask: "+Long.toBinaryString(all));
+        LOG.debug( "All-parent bitmask: "+Long.toBinaryString(all) );
         
         // Initialize the output stream
         try {
