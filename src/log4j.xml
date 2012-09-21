@@ -16,6 +16,9 @@
             <param name="levelMin" value="INFO" />
         </filter>
     </appender>-->
+    <category name="edu.pitt.isp.sverchkov.scorecalculator.ScoreFileV1Writer">
+        <priority value="debug" />
+    </category>
     <root>
         <priority value="all"></priority>
         <appender-ref ref="stdout" />
