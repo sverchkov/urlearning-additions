@@ -6,6 +6,7 @@ package edu.pitt.isp.sverchkov.scorecalculator.gui;
 
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -183,7 +184,7 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        ess = Double.parseDouble( jTextField1.getText() );
+        submitAction();
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -196,11 +197,32 @@ public class ScoreCalculatorJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        submitAction();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void submitAction(){
+        try{
+            ess = Double.parseDouble( jTextField1.getText() );
+        }catch( NumberFormatException e ){
+            JOptionPane.showMessageDialog(this, "The BDe ESS parameter must be a valid decimal number.", null, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if( recordFile == null ){
+            JOptionPane.showMessageDialog(this, "Cannot proceed without a record file.", null, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if( outputFile == null ){
+            JOptionPane.showMessageDialog(this, "Cannot proceed without an output file.", null, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         setVisible(false);
         synchronized( lock ){ lock.notify(); }
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
+    }
+    
     public static void setLookAndFeel(){
         /*
          * Set the Nimbus look and feel
