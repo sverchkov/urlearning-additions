@@ -31,10 +31,11 @@ public class ScoreFileV1Writer implements ScoreWriter {
         if( variables.length > 31 )
             throw new UnsupportedOperationException("Current implementation does not support more than 31 variables.");
         
-        long[] bitmasks = new long[variables.length];
-        long all = 0;
+        final long[] bitmasks = new long[variables.length];
+        final long all = (1L << bitmasks.length) - 1;
         for( int i=0; i < bitmasks.length; i++ )
-            all |= ( bitmasks[i] = 1L << i );
+            bitmasks[i] = 1L << i;
+        final int nscores = (int) (all+1)/2;
         
         LOG.debug("All-parent bitmask: "+Long.toBinaryString(all));
         
@@ -56,9 +57,9 @@ public class ScoreFileV1Writer implements ScoreWriter {
                     LOG.debug("Variable bitmask: "+Long.toBinaryString(bitmasks[i]));
                     
                     // Write header for variable
-                    writeVariable( stream, variables[i], (int) all/2 );
+                    writeVariable( stream, variables[i], nscores );
                     
-                    LOG.debug("Variable header weritten. Writing "+all/2+" scores...");
+                    LOG.debug("Variable header weritten. Writing "+nscores+" scores...");
 
                     // Iterate over all subsets
                     for( long bits = all; bits >= 0; bits-- )
@@ -73,7 +74,7 @@ public class ScoreFileV1Writer implements ScoreWriter {
                                     set.add( variables[j] );
 
                             // Compute score
-                            LOG.debug("Computing score...");
+                            LOG.trace("Computing score...");
                             double score = sf.score( variables[i], set, rs );
 
                             // Write score
