@@ -6,7 +6,7 @@ Additions to Malone and Yuan's URLearning software (see http://url.cs.qc.cuny.ed
 Technical Notes:
 ----------------
 
-* This is a NetBeans project, all the code is under src/
+* All the code is under src/
 
 * The class with main() is edu.pitt.isp.sverchkov.scorecalculator.ScoreCalculator
 
